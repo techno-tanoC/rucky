@@ -8,8 +8,8 @@ pub mod auth;
 pub mod page;
 pub mod model;
 pub mod client;
-pub mod req;
+pub mod api;
 
 pub use model::*;
 pub use client::*;
-pub use req::*;
+pub use api::*;

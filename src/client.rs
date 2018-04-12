@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 
 use auth::*;
 use page::*;
-use req::*;
+use api::*;
 
 #[derive(Clone, Debug)]
 pub struct Client<T> {
@@ -29,16 +29,16 @@ impl Client<Authed> {
 }
 
 impl<T> Client<T> {
-    pub fn request(&self) -> Req<T> {
-        Req {
+    pub fn request(&self) -> API<T> {
+        API {
             token: self.token.clone(),
             page: None,
             phantom: PhantomData
         }
     }
 
-    pub fn request_with(&self, page: i32, per_page: i32) -> Req<T> {
-        Req {
+    pub fn request_with(&self, page: i32, per_page: i32) -> API<T> {
+        API {
             token: self.token.clone(),
             page: Some(Page::new(page, per_page)),
             phantom: PhantomData

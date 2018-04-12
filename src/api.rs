@@ -9,20 +9,20 @@ use auth::*;
 use page::*;
 use model::*;
 
-pub struct Req<T> {
+pub struct API<T> {
     pub(crate) token: String,
     pub(crate) page: Option<Page>,
     pub(crate) phantom: PhantomData<T>
 }
 
-impl<T> Req<T> {
+impl<T> API<T> {
     pub fn get_tags(&self) -> Option<Vec<Tag>> {
         let url = "https://qiita.com/api/v2/tags";
         Self::get(url)
     }
 }
 
-impl Req<Authed> {
+impl API<Authed> {
     pub fn authenticated_user_items(&self) -> Option<Vec<Item>> {
         let target = "https://qiita.com/api/v2/authenticated_user/items";
         let url = self.build_url(target);
@@ -30,7 +30,7 @@ impl Req<Authed> {
     }
 }
 
-impl<T> Req<T> {
+impl<T> API<T> {
     fn get<D: DeserializeOwned>(url: &str) -> Option<D> {
         reqwest::get(url).and_then(|mut res| res.json()).ok()
     }
