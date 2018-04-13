@@ -6,15 +6,16 @@ use req::*;
 use model::*;
 
 pub struct API<T> {
-    pub(crate) token: String,
+    pub(crate) token: Option<String>,
     pub(crate) page: Option<Page>,
     pub(crate) phantom: PhantomData<T>
 }
 
 impl<T> API<T> {
     pub fn get_tags(&self) -> Option<Vec<Tag>> {
-        let url = "https://qiita.com/api/v2/tags";
-        Req::get(url)
+        let target = "https://qiita.com/api/v2/tags";
+        let url = self.build_url(target);
+        Req::get(&url, &self.token)
     }
 }
 

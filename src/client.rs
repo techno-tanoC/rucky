@@ -6,14 +6,14 @@ use api::*;
 
 #[derive(Clone, Debug)]
 pub struct Client<T> {
-    token: String,
+    token: Option<String>,
     phantom: PhantomData<T>
 }
 
 impl Client<Unauthed> {
     pub fn new() -> Client<Unauthed> {
         Client {
-            token: "".to_string(),
+            token: None,
             phantom: PhantomData
         }
     }
@@ -22,7 +22,7 @@ impl Client<Unauthed> {
 impl Client<Authed> {
     pub fn auth(token: &str) -> Client<Authed> {
         Client {
-            token: token.to_string(),
+            token: Some(token.to_string()),
             phantom: PhantomData
         }
     }
