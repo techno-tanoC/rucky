@@ -15,7 +15,7 @@ impl<T> API<T> {
     pub fn get_tags(&self) -> Option<Vec<Tag>> {
         let target = "https://qiita.com/api/v2/tags";
         let url = self.build_url(target);
-        Req::get(&url, &self.token)
+        Req::alter_get(&url, &self.token)
     }
 }
 
@@ -23,7 +23,7 @@ impl API<Authed> {
     pub fn authenticated_user_items(&self) -> Option<Vec<Item>> {
         let target = "https://qiita.com/api/v2/authenticated_user/items";
         let url = self.build_url(target);
-        Req::auth_get(&url, &self.token)
+        Req::get(&url, &self.token)
     }
 }
 
