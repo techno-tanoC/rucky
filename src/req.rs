@@ -1,5 +1,4 @@
-use reqwest;
-use reqwest::header::*;
+use reqwest::{self, Client, header::*};
 use serde::de::DeserializeOwned;
 
 pub struct Req;
@@ -16,18 +15,37 @@ impl Req {
     }
 
     pub fn get<D: DeserializeOwned>(url: &str, token: &Option<String>) -> Option<D> {
-        let access_token = Bearer {
+        let auth = Self::build_bearer(token);
+        Client::new()
+            .get(url)
+            .header(Authorization(auth))
+            .send()
+            .and_then(|mut res| res.json())
+            .ok()
+    }
+
+    pub fn put(url: &str, token: &Option<String>) {
+        let bearer = Self::build_bearer(token);
+        let _ = Client::new()
+            .put(url)
+            .header(Authorization(bearer))
+            .send();
+    }
+
+    pub fn delete(url: &str, token: &Option<String>) {
+        let auth = Self::build_bearer(token);
+        let _ =Client::new()
+            .delete(url)
+            .header(Authorization(auth))
+            .send();
+    }
+
+    fn build_bearer(token: &Option<String>) -> Bearer {
+        Bearer {
             token: token
                 .clone()
                 .expect("the token must not be empty")
                 .to_string()
-        };
-
-        reqwest::Client::new()
-            .get(url)
-            .header(Authorization(access_token))
-            .send()
-            .and_then(|mut res| res.json())
-            .ok()
+        }
     }
 }
