@@ -12,9 +12,20 @@ pub struct API<T> {
 }
 
 impl<T> API<T> {
-    pub fn get_tags(&self) -> Option<Vec<Tag>> {
+    //Tag
+    pub fn tags(&self) -> Option<Vec<Tag>> {
         let target = "https://qiita.com/api/v2/tags";
         let url = self.build_url(target);
+        Req::alter_get(&url, &self.token)
+    }
+
+    pub fn tag(&self, tag_id: &str) -> Option<Tag> {
+        let url = format!("https://qiita.com/api/v2/tags/{}", tag_id);
+        Req::alter_get(&url, &self.token)
+    }
+
+    pub fn user_following_tags(&self, user_id: &str) -> Option<Vec<Tag>> {
+        let url = format!("https://qiita.com/api/v2/users/{}/following_tags", user_id);
         Req::alter_get(&url, &self.token)
     }
 }
@@ -24,6 +35,17 @@ impl API<Authed> {
         let target = "https://qiita.com/api/v2/authenticated_user/items";
         let url = self.build_url(target);
         Req::get(&url, &self.token)
+    }
+
+    // Tag
+    pub fn follow_tag(&self, tag_id: &str) {
+        let url = format!("https://qiita.com/api/v2/tags/{}/following", tag_id);
+        Req::put(&url, &self.token)
+    }
+
+    pub fn unfollow_tag(&self, tag_id: &str) {
+        let url = format!("https://qiita.com/api/v2/tags/{}/following", tag_id);
+        Req::delete(&url, &self.token)
     }
 }
 
